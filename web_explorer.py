@@ -11,9 +11,14 @@ load_dotenv()
 #os.environ["GOOGLE_API_KEY"] = "YOUR_API_KEY" # Get it at https://console.cloud.google.com/apis/api/customsearch.googleapis.com/credentials
 #os.environ["GOOGLE_CSE_ID"] = "YOUR_CSE_ID" # Get it at https://programmablesearchengine.google.com/
 #os.environ["OPENAI_API_BASE"] = "https://api.openai.com/v1"
-#os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY" # Get it at https://beta.openai.com/account/api-keys
+#os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY" 
 
-st.set_page_config(page_title="Interweb Explorer", page_icon="🌐")
+st.set_page_config(page_title="Karl's AI Search Engine", page_icon="🌐")
+
+#models
+turbo = gpt-3.5-turbo
+turbo_16k = gpt-3.5-turbo-16k
+gpt4 = gpt-4
 
 def settings():
 
@@ -27,9 +32,10 @@ def settings():
     index = faiss.IndexFlatL2(embedding_size)  
     vectorstore_public = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
 
+
     # LLM
     from langchain.chat_models import ChatOpenAI
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo-16k", temperature=0, streaming=True)
+    llm = ChatOpenAI(model_name=turbo, temperature=0, streaming=True)
 
     # Search
     from langchain.utilities import GoogleSearchAPIWrapper
@@ -70,7 +76,7 @@ class PrintRetrievalHandler(BaseCallbackHandler):
             self.container.text(doc.page_content)
 
 
-st.sidebar.image("img/ai.png")
+st.sidebar.image("img/horofox.png")
 st.header("`Interweb Explorer`")
 st.info("`I am an AI that can answer questions by exploring, reading, and summarizing web pages."
     "I can be configured to use different modes: public API or private (no data sharing).`")
