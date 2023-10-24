@@ -16,9 +16,9 @@ load_dotenv()
 st.set_page_config(page_title="Karl's AI Search Engine", page_icon="🌐")
 
 #models
-turbo = gpt-3.5-turbo
-turbo_16k = gpt-3.5-turbo-16k
-gpt4 = gpt-4
+turbo = "gpt-3.5-turbo"
+turbo_16k = "gpt-3.5-turbo-16k"
+gpt4 = "gpt-4"
 
 def settings():
 
