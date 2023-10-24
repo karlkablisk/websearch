@@ -13,7 +13,7 @@ load_dotenv()
 #os.environ["OPENAI_API_BASE"] = "https://api.openai.com/v1"
 #os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY" 
 
-st.set_page_config(page_title="Karl's AI Search Engine", page_icon="🌐")
+st.set_page_config(page_title="HORO AI Search Engine", page_icon="🌐")
 
 #models
 turbo = "gpt-3.5-turbo"
@@ -77,7 +77,7 @@ class PrintRetrievalHandler(BaseCallbackHandler):
 
 
 st.sidebar.image("img/horofox.png")
-st.header("`Karl's AI Search Engine`")
+st.header("`HORO AI Search Engine`")
 st.info("Horo has been uploaded to the internet. Now she helps anyone answer questions by exploring, reading, and summarizing web pages.")
 
 # Make retriever and llm
