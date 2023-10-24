@@ -78,7 +78,7 @@ class PrintRetrievalHandler(BaseCallbackHandler):
 
 st.sidebar.image("img/horofox.png")
 st.header("`Karl's AI Search Engine`")
-st.info("`Horo has been uploaded to the internet. Now she helps anyone answer questions by exploring, reading, and summarizing web pages.")
+st.info("Horo has been uploaded to the internet. Now she helps anyone answer questions by exploring, reading, and summarizing web pages.")
 
 # Make retriever and llm
 if 'retriever' not in st.session_state:
