@@ -47,7 +47,7 @@ def settings():
         vectorstore=vectorstore_public,
         llm=llm, 
         search=search, 
-        num_search_results=1
+        num_search_results=3
     )
 
     return web_retriever, llm
