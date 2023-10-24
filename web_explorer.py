@@ -4,6 +4,7 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.retrievers.web_research import WebResearchRetriever
 
 import os
+import paramiko
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -104,3 +105,75 @@ if question:
     result = qa_chain({"question": question},callbacks=[retrieval_streamer_cb, stream_handler])
     answer.info('`Answer:`\n\n' + result['answer'])
     st.info('`Sources:`\n\n' + result['sources'])
+
+# Code to save files
+
+
+def mkdir_p(sftp, remote_directory):
+  """Change to this directory, recursively making new folders if needed.
+    Returns True if any folders were created."""
+  if remote_directory == '/':
+    # absolute path so change directory to root
+    sftp.chdir('/')
+    return
+  if remote_directory == '':
+    # top-level relative directory must exist
+    return
+  try:
+    sftp.chdir(remote_directory)  # sub-directory exists
+  except IOError:
+    dirname, basename = os.path.split(remote_directory.rstrip('/'))
+    mkdir_p(sftp, dirname)  # make parent directories
+    sftp.mkdir(basename)  # sub-directory missing, so created it
+    sftp.chdir(basename)
+    return True
+
+
+def upload_to_server(filename, uid, remote_folder):
+  try:
+    print("Attempting to connect...")
+
+    # Initialize the SSH client
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    # Connection details: replace with your actual details
+    ssh.connect(hostname='',
+                username='',
+                password=os.environ['SSH_PASS'])
+    print("SSH Connection Successful.")
+
+    # Open the SFTP session
+    sftp = ssh.open_sftp()
+
+    # User-specific details
+    user_name = get_user_name()
+    #print(f"UID: {uid}")  # Display UID
+    #print(f"Username: {user_name}")  # Display Username
+
+    # Remote directory path: replace with your actual path
+    remote_directory = f"/applications/site/public_html/{remote_folder}/"
+
+    # Ensure the remote directory exists
+    mkdir_p(sftp, remote_directory)
+
+    # Check if remote directory exists, if not create it
+    try:
+      sftp.stat(remote_directory)
+    except FileNotFoundError:
+      sftp.mkdir(remote_directory)
+
+    # Full path to the file on the remote server
+    remote_path = remote_directory + filename
+
+    # Upload the file
+    sftp.put(filename, remote_path)
+    print("File uploaded successfully.")
+
+    # Close the SFTP and SSH sessions
+    sftp.close()
+    ssh.close()
+
+  except Exception as e:
+    print(f"An error occurred: {e}")
+
